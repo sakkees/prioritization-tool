@@ -12,5 +12,4 @@ public class PrioritizationToolApplication {
     public static void main(String[] args) {
         SpringApplication.run(PrioritizationToolApplication.class, args);
     }
-
 }
