@@ -61,20 +61,54 @@ public class Controller {
         return title + " added in database.";
     }
 
-    @PostMapping("/addIsac")
-    public String addData() {
-        String firstName = "Isac";
-        String lastName = "Larsson";
-        docRef = db.collection("users").document(firstName);
-        Map<String, Object> data = new HashMap<>();
-        data.put("name", firstName);
-        data.put("description", lastName);
-        //asynchronously write data
-        ApiFuture<WriteResult> result = docRef.set(data);
-        return firstName + " " + lastName + " added in database.";
+    // Get and convert the document into an issue object
+    @GetMapping("/api/get")
+    public Issue getIssue(){
+        Issue issue = null;
+        DocumentReference docRef = db.collection("issues").document("issue");
+        // asynchronously retrieve the document
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        // block on response
+        DocumentSnapshot document = null;
+        try {
+            document = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        if (document.exists()) {
+
+            // convert document to POJO (Plain Old Java Object)
+            issue = document.toObject(Issue.class);
+            System.out.println(issue.getTitle());
+        } else {
+            System.out.println("No such document!");
+        }
+        return issue;
+    }
+    private IssueService issueService;
+    @GetMapping("/api/issues")
+    public List<Issue> getIssues(){
+        //asynchronously retrieve multiple documents
+        ApiFuture<QuerySnapshot> future =
+                db.collection("cities").whereEqualTo("capital", true).get();
+        // future.get() blocks on response
+        List<QueryDocumentSnapshot> documents = null;
+        try {
+            documents = future.get().getDocuments();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        for (DocumentSnapshot document : documents) {
+            //listOfIssues.add(document.toObject(Issue.class));
+            System.out.println(document.getId() + " => " + document.toObject(Issue.class));
+        }
+        return issueService.findAll();
     }
 
-    @GetMapping("/collection")
+    // Get collection and returns a string of all the documents key and value
+    @GetMapping("/api/collection")
     public String getCollection() {
         StringBuilder collection = new StringBuilder();
         // asynchronously retrieve all issues
@@ -88,12 +122,26 @@ public class Controller {
         }
         List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
         for (QueryDocumentSnapshot document : documents) {
+           // issueService.addIssue(document.toObject(Issue.class));
             collection.append(document.getString("title"))
                     .append(" : ")
                     .append(document.getString("description"))
                     .append(", ");
         }
+        //return issueService.findAll();
         return collection.toString();
     }
 
+    @PostMapping("/api/addIsac")
+    public String addData() {
+        String firstName = "Isac";
+        String lastName = "Larsson";
+        docRef = db.collection("users").document(firstName);
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", firstName);
+        data.put("description", lastName);
+        //asynchronously write data
+        ApiFuture<WriteResult> result = docRef.set(data);
+        return firstName + " " + lastName + " added in database.";
+    }
 }
