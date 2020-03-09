@@ -1,6 +1,7 @@
 package com.example.prioritizationtool.controller;
 
 import com.example.prioritizationtool.model.Issue;
+import com.example.prioritizationtool.service.IssueService;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,32 @@ public class Controller {
     Firestore db = firestoreOptions.getService();
 
     DocumentReference docRef;
+/*
+    @Autowired
+    IssueService issueService;
 
-    @PostMapping("/add")
+    @RequestMapping("/issues")
+    public ResponseEntity<Object> getAllIssues() {
+        return new ResponseEntity<Issue>(IssueService.findAll(), HttpStatus.OK);
+    }
+    @RequestMapping("/issue")
+    public ResponseEntity<Object> getIssueById() {
+        return new ResponseEntity<Issue>(IssueService.getIssue(), HttpStatus.OK);
+    }
+    @PutMapping("/update")
+    public ResponseEntity<Object> updateIssue() {
+        return new ResponseEntity<Issue>(IssueService.updateIssue(), HttpStatus.OK);
+    }
+    @PostMapping("/create")
+    public ResponseEntity<Object> createIssue(){
+        return new ResponseEntity<Issue>(IssueService.createIssue(), HttpStatus.OK);
+    }
+    @DeleteMapping("/delete/issue")
+    public ResponseEntity<Object> deleteIssue(){
+        return new ResponseEntity<Issue>(IssueService.deleteIssue(), HttpStatus.OK);
+    }
+    */
+    @PostMapping(path = "/api/add")
     public String addIssue(@RequestBody Map<String, Object> payload) {
         String title = "";
         for(Map.Entry<String, Object> entry : payload.entrySet()){
