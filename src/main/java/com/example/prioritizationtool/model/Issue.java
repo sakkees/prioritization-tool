@@ -1,19 +1,27 @@
 package com.example.prioritizationtool.model;
 
-public class Issue {
-    private String title;
-    private String desc;
+import org.springframework.data.annotation.Id;
 
-    public Issue(String title, String desc) {
+public class Issue {
+    @Id
+    private String title;
+    private String description;
+
+    public Issue(){
+    }
+
+    public Issue(String title, String description) {
         this.title = title;
-        this.desc = desc;
+        this.description = description;
     }
 
     public String getTitle() {
         return title;
     }
-
-    public String getDesc() {
-        return desc;
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
