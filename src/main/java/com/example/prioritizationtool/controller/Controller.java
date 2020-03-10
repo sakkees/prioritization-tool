@@ -88,26 +88,6 @@ public class Controller {
         return issue;
     }
     private IssueService issueService;
-    @GetMapping("/api/issues")
-    public List<Issue> getIssues(){
-        //asynchronously retrieve multiple documents
-        ApiFuture<QuerySnapshot> future =
-                db.collection("cities").whereEqualTo("capital", true).get();
-        // future.get() blocks on response
-        List<QueryDocumentSnapshot> documents = null;
-        try {
-            documents = future.get().getDocuments();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        for (DocumentSnapshot document : documents) {
-            //listOfIssues.add(document.toObject(Issue.class));
-            System.out.println(document.getId() + " => " + document.toObject(Issue.class));
-        }
-        return issueService.findAll();
-    }
 
     /* Get collection and returns a string of all the documents keys and values */
     @GetMapping("/api/collection")
