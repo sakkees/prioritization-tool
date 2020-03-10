@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 public class Controller {
+    /* This should be moved elsewhere, db should be = repository(or service) i believe */
     private String projectId;
     FirestoreOptions firestoreOptions =
             FirestoreOptions.getDefaultInstance().toBuilder()
@@ -21,7 +22,7 @@ public class Controller {
     Firestore db = firestoreOptions.getService();
 
     DocumentReference docRef;
-/*
+    /*
     @Autowired
     IssueService issueService;
 
@@ -46,6 +47,7 @@ public class Controller {
         return new ResponseEntity<Issue>(IssueService.deleteIssue(), HttpStatus.OK);
     }
     */
+
     @PostMapping(path = "/api/add")
     public String addIssue(@RequestBody Map<String, Object> payload) {
         String title = "";
@@ -61,7 +63,8 @@ public class Controller {
         return title + " added in database.";
     }
 
-    // Get and convert the document into an issue object
+    /*  Get and convert the document into an issue object
+    *   returns an issue object */
     @GetMapping("/api/get")
     public Issue getIssue(){
         Issue issue = null;
@@ -76,7 +79,6 @@ public class Controller {
             e.printStackTrace();
         }
         if (document.exists()) {
-
             // convert document to POJO (Plain Old Java Object)
             issue = document.toObject(Issue.class);
             System.out.println(issue.getTitle());
@@ -107,7 +109,7 @@ public class Controller {
         return issueService.findAll();
     }
 
-    // Get collection and returns a string of all the documents key and value
+    /* Get collection and returns a string of all the documents keys and values */
     @GetMapping("/api/collection")
     public String getCollection() {
         StringBuilder collection = new StringBuilder();
@@ -131,7 +133,7 @@ public class Controller {
         //return issueService.findAll();
         return collection.toString();
     }
-
+    /* Test for adding something in database */
     @PostMapping("/api/addIsac")
     public String addData() {
         String firstName = "Isac";
