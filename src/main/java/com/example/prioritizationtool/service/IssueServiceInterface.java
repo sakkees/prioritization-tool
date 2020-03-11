@@ -2,13 +2,13 @@ package com.example.prioritizationtool.service;
 
 import com.example.prioritizationtool.model.Issue;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface IssueServiceInterface {
-    List<Issue> findAll();
+    ArrayList<Issue> findAll();
     void addIssue(Issue issue);
     void createIssue(String title, String description);
-    void updateIssue(Issue issue, String title, String description);
-    void deleteIssue(String title);
+    void updateIssue(Issue issue, String description);
+    void deleteIssue(Issue issue);
     Issue getIssue(String title);
 }
