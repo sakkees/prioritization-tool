@@ -2,17 +2,19 @@ package com.example.prioritizationtool.service;
 
 import com.example.prioritizationtool.model.Issue;
 import com.example.prioritizationtool.repository.IssueRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.ArrayList;
 
 @Service
 public class IssueService implements IssueServiceInterface {
+    @Autowired
     private IssueRepository repository;
 
     @Override
-    public List<Issue> findAll() {
+    public ArrayList<Issue> findAll() {
         return repository.findAll();
     }
 
@@ -27,7 +29,7 @@ public class IssueService implements IssueServiceInterface {
     }
 
     @Override
-    public void updateIssue(@NotNull Issue issue, String title, String description) {
+    public void updateIssue(Issue issue, String description) {
         issue.setDescription(description);
     }
 
@@ -37,7 +39,7 @@ public class IssueService implements IssueServiceInterface {
     }
 
     @Override
-    public void deleteIssue(String title) {
-        repository.delete(getIssue(title));
+    public void deleteIssue(Issue issue) {
+        repository.delete(issue);
     }
 }
