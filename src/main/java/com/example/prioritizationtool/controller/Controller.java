@@ -17,17 +17,6 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 public class Controller {
-    /* This should be moved elsewhere, db should be = repository(or service) i believe */
-    private String projectId;
-    FirestoreOptions firestoreOptions =
-            FirestoreOptions.getDefaultInstance().toBuilder()
-                    .setProjectId(projectId)
-                    .build();
-    Firestore db = firestoreOptions.getService();
-    CollectionReference collectionRef = db.collection("issues");
-    DocumentReference docRef;
-
-
     @Autowired
     private IssueService issueService;
 
