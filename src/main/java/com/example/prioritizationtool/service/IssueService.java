@@ -5,14 +5,16 @@ import com.example.prioritizationtool.repository.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 
 @Service
 public class IssueService implements IssueServiceInterface {
-    @Autowired
     private IssueRepository repository;
 
+    @Autowired
+    public IssueService(IssueRepository repository){
+        this.repository = repository;
+    }
     @Override
     public ArrayList<Issue> findAll() {
         return repository.findAll();
