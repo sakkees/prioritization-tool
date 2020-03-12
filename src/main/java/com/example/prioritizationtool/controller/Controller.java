@@ -2,23 +2,20 @@ package com.example.prioritizationtool.controller;
 
 import com.example.prioritizationtool.model.Issue;
 import com.example.prioritizationtool.service.IssueService;
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 @RestController
 public class Controller {
-    @Autowired
     private IssueService issueService;
+
+    @Autowired
+    public Controller(IssueService issueService){
+        this.issueService = issueService;
+    }
 
     @PostMapping("/create")
     public Issue addIssue1(@RequestBody Issue issue){
