@@ -1,17 +1,17 @@
 package com.example.prioritizationtool.repository;
 
 import com.example.prioritizationtool.model.Issue;
+import com.example.prioritizationtool.model.Item;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.concurrent.ExecutionException;
 
 @Repository
-public class IssueRepository implements IssueRepositoryInterface{
+public class IssueRepository implements ItemRepository<Item> {
     private String projectId;
     FirestoreOptions firestoreOptions =
             FirestoreOptions.getDefaultInstance().toBuilder()
@@ -19,7 +19,7 @@ public class IssueRepository implements IssueRepositoryInterface{
                     .build();
     private Firestore db = firestoreOptions.getService();
     private CollectionReference collectionRef = db.collection("issues");
-    ArrayList<Issue> issues;
+    ArrayList<Item> issues;
 
     public IssueRepository(){
         issues = new ArrayList<>();
@@ -45,7 +45,7 @@ public class IssueRepository implements IssueRepositoryInterface{
     }
 
     @Override
-    public ArrayList<Issue> findAll() {
+    public ArrayList<Item> findAll() {
         return issues;
     }
 
@@ -71,14 +71,12 @@ public class IssueRepository implements IssueRepositoryInterface{
         return issue;
     }
 
-    @Override
-    public void put(Issue issue) {
+    public void put(Item issue) {
         collectionRef.document(issue.getTitle()).set(issue);
         issues.add(issue);
     }
 
-    @Override
-    public void delete(Issue issue) {
+    public void delete(Item issue) {
         collectionRef.document(issue.getTitle()).delete();
         issues.remove(issue);
     }

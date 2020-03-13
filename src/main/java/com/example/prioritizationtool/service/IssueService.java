@@ -1,6 +1,7 @@
 package com.example.prioritizationtool.service;
 
 import com.example.prioritizationtool.model.Issue;
+import com.example.prioritizationtool.model.Item;
 import com.example.prioritizationtool.repository.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,40 +9,36 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
-public class IssueService implements IssueServiceInterface {
+public class IssueService implements ItemService<Item> {
     private IssueRepository repository;
 
     @Autowired
     public IssueService(IssueRepository repository){
         this.repository = repository;
     }
-    @Override
-    public ArrayList<Issue> findAll() {
+    public ArrayList<Item> findAll() {
         return repository.findAll();
     }
 
-    @Override
-    public void addIssue(Issue issue) {
+    public void add(Item issue) {
         repository.put(issue);
     }
 
     @Override
-    public void createIssue(String title, String desc) {
+    public void create(String title, String desc) {
        repository.put(new Issue(title, desc));
     }
 
-    @Override
-    public void updateIssue(Issue issue, String description) {
+    public void updateDescription(Item issue, String description) {
         issue.setDescription(description);
     }
 
     @Override
-    public Issue getIssue(String title) {
+    public Issue getByTitle(String title) {
        return repository.findByTitle(title);
     }
 
-    @Override
-    public void deleteIssue(Issue issue) {
+    public void delete(Item issue) {
         repository.delete(issue);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.prioritizationtool.controller;
 
 import com.example.prioritizationtool.model.Issue;
+import com.example.prioritizationtool.model.Item;
 import com.example.prioritizationtool.service.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,8 @@ public class Controller {
 
     @PostMapping("/create")
     public Issue addIssue1(@RequestBody Issue issue){
-        issueService.addIssue(issue);
+        // TODO If issue already exists should not rewrite ID, nothing should happen
+        issueService.add(issue);
         return issue;
     }
 
@@ -28,8 +30,8 @@ public class Controller {
         Issue issue;
         for(Map.Entry<String, Object> entry : payload.entrySet()){
             if(entry.getKey().equals("title")){
-                issue = issueService.getIssue(entry.getValue().toString());
-                issueService.deleteIssue(issue);
+                issue = issueService.getByTitle(entry.getValue().toString());
+                issueService.delete(issue);
             }
         }
         return "Deleted!";
@@ -38,7 +40,7 @@ public class Controller {
     /* Uses same method as create issue */
     @PutMapping("/update")
     public Issue updateIssue(@RequestBody Issue issue) {
-        issueService.addIssue(issue);
+        issueService.add(issue);
         return issue;
     }
 
@@ -47,14 +49,14 @@ public class Controller {
         Issue issue = null;
         for(Map.Entry<String, Object> entry : payload.entrySet()){
             if(entry.getKey().equals("title")){
-                issue = issueService.getIssue(entry.getValue().toString());
+                issue = issueService.getByTitle(entry.getValue().toString());
             }
         }
         return issue;
     }
 
     @RequestMapping("/list")
-    public ArrayList<Issue> getAllIssues() {
+    public ArrayList<Item> getAllIssues() {
         return issueService.findAll();
     }
 }
