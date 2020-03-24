@@ -13,6 +13,16 @@ public class Issue extends Item {
     }
 
     @Override
+    public boolean equals(Object issue){
+        if(issue.getClass().equals(Issue.class)){
+            if(((Issue) issue).getDescription().equals(this.getDescription()) && ((Issue) issue).getTitle().equals(this.getTitle())){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
     public String getTitle() {
         return title;
     }
