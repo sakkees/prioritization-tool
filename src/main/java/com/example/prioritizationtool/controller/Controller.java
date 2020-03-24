@@ -3,6 +3,7 @@ package com.example.prioritizationtool.controller;
 import com.example.prioritizationtool.model.Issue;
 import com.example.prioritizationtool.model.Item;
 import com.example.prioritizationtool.service.IssueService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +21,13 @@ public class Controller {
 
     @PostMapping("/create")
     public Issue addIssue1(@RequestBody Issue issue){
-        // TODO If issue already exists should not rewrite ID, nothing should happen
+        /* TODO If issue already exists should not rewrite ID, nothing should happen */
         issueService.add(issue);
         return issue;
     }
 
     @DeleteMapping("/delete")
-    public String deleteIssue(@RequestBody Map<String, Object> payload){
+    public String deleteIssue(@NotNull @RequestBody Map<String, Object> payload){
         Issue issue;
         for(Map.Entry<String, Object> entry : payload.entrySet()){
             if(entry.getKey().equals("title")){
@@ -45,7 +46,7 @@ public class Controller {
     }
 
     @RequestMapping("/issue")
-    public Issue getIssueById(@RequestBody Map<String, Object> payload) {
+    public Issue getIssueById(@NotNull @RequestBody Map<String, Object> payload) {
         Issue issue = null;
         for(Map.Entry<String, Object> entry : payload.entrySet()){
             if(entry.getKey().equals("title")){
