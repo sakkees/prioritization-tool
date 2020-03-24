@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+/*  TODO:
+*       * Delete does not remove from internal list.
+*       * Edit changes the ID.
+*/
+
 @Repository
 public class IssueRepository implements ItemRepository<Item> {
     private String projectId;
@@ -46,6 +51,7 @@ public class IssueRepository implements ItemRepository<Item> {
 
     @Override
     public ArrayList<Item> findAll() {
+
         return issues;
     }
 
