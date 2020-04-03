@@ -21,17 +21,26 @@ public class IssueRepository implements ItemRepository {
         this.collectionRef = db.collection("issues");
     }
 
+    @Override
+    public MyList getListById(String listId) {
+        MyList list = null;
+        DocumentReference docRef = collectionRef.document("id");
+        // asynchronously retrieve the document
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        // block on response
+        DocumentSnapshot document = null;
         try {
-            querySnapshot = query.get();
+            document = future.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-        Issue issue = null;
-        for (QueryDocumentSnapshot document : documents){
-            issue = document.toObject(Issue.class);
-            issues.add(issue);
+        if (document.exists()) {
+            // convert document to POJO (Plain Old Java Object)
+            list = document.toObject(MyList.class);
+        } else {
+            System.out.println("No such document!");
         }
+        return list;
     }
 
     @Override
