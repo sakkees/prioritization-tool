@@ -1,7 +1,6 @@
 package com.example.prioritizationtool;
 
-import com.example.prioritizationtool.model.Issue;
-import com.example.prioritizationtool.model.Item;
+import com.example.prioritizationtool.model.MyItem;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -11,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class IssueTest {
     @Test
     public void issueEquals(){
-        Issue issue = new Issue("title","desc");
-        Issue issue1 = new Issue("title","desc");
+        MyItem issue = new MyItem("title","desc");
+        MyItem issue1 = new MyItem("title","desc");
         assertEquals(issue1,issue);
     }
 }
