@@ -1,13 +1,11 @@
 package com.example.prioritizationtool.repository;
 
-import com.example.prioritizationtool.model.Issue;
-import com.example.prioritizationtool.model.Item;
+import com.example.prioritizationtool.model.MyItem;
+import com.example.prioritizationtool.model.MyList;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /*  TODO:
