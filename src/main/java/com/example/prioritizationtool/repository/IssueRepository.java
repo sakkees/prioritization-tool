@@ -43,12 +43,16 @@ public class IssueRepository implements ItemRepository {
         return list;
     }
 
+    private DocumentSnapshot getDocSnap(String listId){
+        ApiFuture<DocumentSnapshot> future = collectionRef.document(listId).get();
         DocumentSnapshot document = null;
         try {
             document = future.get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+        return document;
+    }
         if (document.exists()) {
             // convert document to POJO (Plain Old Java Object)
             issue = document.toObject(Issue.class);
