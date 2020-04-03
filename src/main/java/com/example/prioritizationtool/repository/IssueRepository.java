@@ -53,11 +53,21 @@ public class IssueRepository implements ItemRepository {
         }
         return document;
     }
+
+    @Override
+    public MyItem getItemById(String itemId, String listId) {
+        DocumentSnapshot document = getDocSnap(listId);
+        MyList list;
+        MyItem item = null;
         if (document.exists()) {
-            // convert document to POJO (Plain Old Java Object)
-            issue = document.toObject(Issue.class);
+            // convert document to POJO
+            list = document.toObject(MyList.class);
+            item = list.getItemById(itemId);
         } else {
-            System.out.println("No such document!");
+            System.out.println("No such document / item!");
+        }
+        return item;
+    }
         }
         return issue;
     }
