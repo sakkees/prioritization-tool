@@ -9,19 +9,16 @@ import org.springframework.stereotype.Repository;
 import java.util.concurrent.ExecutionException;
 
 @Repository
-public class IssueRepository implements ItemRepository<Item> {
-    private String projectId;
-    FirestoreOptions firestoreOptions =
-            FirestoreOptions.getDefaultInstance().toBuilder()
-                    .setProjectId(projectId)
-                    .build();
-    private Firestore db = firestoreOptions.getService();
-    private CollectionReference collectionRef = db.collection("issues");
-    ArrayList<Item> issues;
+public class IssueRepository implements ItemRepository {
+    private CollectionReference collectionRef;
 
     public IssueRepository(){
-        issues = new ArrayList<>();
-        fillArray();
+        String projectId = "named-sunset-265213";
+        FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
+                .setProjectId(projectId)
+                .build();
+        Firestore db = firestoreOptions.getService();
+        this.collectionRef = db.collection("issues");
     }
 
     private void fillArray(){
