@@ -21,11 +21,6 @@ public class IssueRepository implements ItemRepository {
         this.collectionRef = db.collection("issues");
     }
 
-    private void fillArray(){
-        // asynchronously retrieve all issues
-        ApiFuture<QuerySnapshot> query = collectionRef.get();
-        // query.get() blocks on response
-        QuerySnapshot querySnapshot = null;
         try {
             querySnapshot = query.get();
         } catch (InterruptedException | ExecutionException e) {
