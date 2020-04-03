@@ -85,9 +85,8 @@ public class IssueRepository implements ItemRepository {
         }
     }
 
-    public void put(Item issue) {
-        collectionRef.document(issue.getTitle()).set(issue);
-        issues.add(issue);
+    public void put(MyList list) {
+        collectionRef.document(list.getId()).set(list);
     }
 
     public void delete(Item issue) {
