@@ -40,12 +40,6 @@ public class IssueRepository implements ItemRepository {
     }
 
     @Override
-    public ArrayList<Item> findAll() {
-
-        return issues;
-    }
-
-    @Override
     public Issue findByTitle(String id) {
         Issue issue = null;
         DocumentReference docRef = collectionRef.document(id);
