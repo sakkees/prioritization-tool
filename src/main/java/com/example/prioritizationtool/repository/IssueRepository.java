@@ -89,8 +89,9 @@ public class IssueRepository implements ItemRepository {
         collectionRef.document(list.getId()).set(list);
     }
 
-    public void delete(Item issue) {
-        collectionRef.document(issue.getTitle()).delete();
-        issues.remove(issue);
+
+    @Override
+    public void deleteListById(String listId) {
+        collectionRef.document(listId).delete();
     }
 }
