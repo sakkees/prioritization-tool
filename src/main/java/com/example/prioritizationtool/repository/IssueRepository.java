@@ -43,13 +43,6 @@ public class IssueRepository implements ItemRepository {
         return list;
     }
 
-    @Override
-    public Issue findByTitle(String id) {
-        Issue issue = null;
-        DocumentReference docRef = collectionRef.document(id);
-        // asynchronously retrieve the document
-        ApiFuture<DocumentSnapshot> future = docRef.get();
-        // block on response
         DocumentSnapshot document = null;
         try {
             document = future.get();
