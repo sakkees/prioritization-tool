@@ -89,6 +89,10 @@ public class IssueRepository implements ItemRepository {
         collectionRef.document(list.getId()).set(list);
     }
 
+    @Override
+    public void put(MyItem item, String listId) {
+        collectionRef.document(listId).update("list", FieldValue.arrayUnion(item));
+    }
 
     @Override
     public void deleteListById(String listId) {
