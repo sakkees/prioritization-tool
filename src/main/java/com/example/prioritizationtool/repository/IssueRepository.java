@@ -68,8 +68,21 @@ public class IssueRepository implements ItemRepository {
         }
         return item;
     }
+
+    @Override
+    public void deleteItemById(String itemId, String listId) {
+        DocumentSnapshot document = getDocSnap(listId);
+        MyList list;
+        MyItem item;
+        if (document.exists()) {
+            // convert document to POJO
+            list = document.toObject(MyList.class);
+            item = list.getItemById(itemId);
+            list.remove(item);
+            this.put(list);
+        } else {
+            System.out.println("No such list / item!");
         }
-        return issue;
     }
 
     public void put(Item issue) {
