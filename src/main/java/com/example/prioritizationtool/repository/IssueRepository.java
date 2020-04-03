@@ -8,11 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.ExecutionException;
 
-/*  TODO:
-*       * Delete does not remove from internal list.
-*       * Edit changes the ID.
-*/
-
 @Repository
 public class IssueRepository implements ItemRepository<Item> {
     private String projectId;
