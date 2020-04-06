@@ -5,6 +5,8 @@ import com.example.prioritizationtool.model.MyList;
 import com.example.prioritizationtool.repository.IssueRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
@@ -20,23 +22,23 @@ public class IssueController {
     }
 
     @PostMapping("/create")
-    public String add(@RequestBody MyList list){
+    public ResponseEntity<String> add(@RequestBody MyList list){
         issueRepository.put(list);
-        return "List with owner: " + list.getOwner() + " added." ;
+        return ResponseEntity.status(HttpStatus.CREATED).body(list.getOwner() + " added.");
     }
 
     @DeleteMapping("/delete")
-    public String deleteList(@NotNull @RequestBody Map<String, Object> payload){
+    public ResponseEntity<String> deleteList(@NotNull @RequestBody Map<String, Object> payload){
         for(Map.Entry<String, Object> entry : payload.entrySet()){
             if (entry.getKey().equals("listId")){
                 issueRepository.deleteListById(entry.getValue().toString());
             }
         }
-        return "List deleted!";
+        return ResponseEntity.status(HttpStatus.OK).body("List deleted.");
     }
 
     @DeleteMapping("/deleteItem")
-    public String deleteIssue(@NotNull @RequestBody Map<String, String> payload){
+    public ResponseEntity<String> deleteIssue(@NotNull @RequestBody Map<String, String> payload){
         String issueId = null;
         String listId = null;
 
@@ -50,12 +52,11 @@ public class IssueController {
         }
         String id = issueId;
         issueRepository.deleteItemById(issueId,listId);
-        return "(List Id): " + listId + ", (Issue Id): " +  id + " deleted!";
+        return ResponseEntity.status(HttpStatus.OK).body("(List Id): " + listId + ", (Issue Id): " +  id + " deleted!");
     }
 
-    /* Working method but kind of a hack solution */
     @PutMapping("/addIssue")
-    public void addIssueToList(@NotNull @RequestBody Map<String, Object> payload) {
+    public ResponseEntity<String> addIssueToList(@NotNull @RequestBody Map<String, Object> payload) {
         MyItem item = null;
         String listId = null;
         for(Map.Entry<String, Object> entry : payload.entrySet()){
@@ -64,16 +65,17 @@ public class IssueController {
             }
             if(entry.getKey().equals("issue")){
                 LinkedHashMap<String, String> map = (LinkedHashMap<String, String>) entry.getValue();
-                String t = map.get("title");
-                String d = map.get("description");
-                item = new MyItem(t,d);
+                String title = map.get("title");
+                String description = map.get("description");
+                item = new MyItem(title,description);
             }
         }
         issueRepository.put(item, listId);
+        return ResponseEntity.status(HttpStatus.OK).body("Added");
     }
 
-    @RequestMapping("/issue")
-    public MyItem getIssueById(@NotNull @RequestBody Map<String, String> payload) {
+    @GetMapping("/issue")
+    public ResponseEntity<MyItem> getIssueById(@NotNull @RequestBody Map<String, String> payload) {
         String listId = null;
         String itemId = null;
         for(Map.Entry<String, String> entry : payload.entrySet()){
@@ -84,16 +86,16 @@ public class IssueController {
                 itemId = entry.getValue();
             }
         }
-        return issueRepository.getItemById(itemId, listId);
+        return ResponseEntity.status(HttpStatus.OK).body(issueRepository.getItemById(itemId, listId));
     }
 
-    @RequestMapping("/list")
-    public MyList getAllIssues(@RequestBody Map<String, String> payload) {
+    @GetMapping("/list")
+    public ResponseEntity getAllIssues(@NotNull @RequestBody Map<String, String> payload) {
         for(Map.Entry<String, String> entry : payload.entrySet()){
             if(entry.getKey().equals("listId")){
-               return issueRepository.getListById(entry.getValue());
+               return ResponseEntity.status(HttpStatus.OK).body(issueRepository.getListById(entry.getValue()));
             }
         }
-        return null;
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No issues");
     }
 }
