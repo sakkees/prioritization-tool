@@ -24,7 +24,7 @@ public class IssueRepository implements ItemRepository {
     @Override
     public MyList getListById(String listId) {
         MyList list = null;
-        DocumentReference docRef = collectionRef.document("id");
+        DocumentReference docRef = collectionRef.document(listId);
         // asynchronously retrieve the document
         ApiFuture<DocumentSnapshot> future = docRef.get();
         // block on response
