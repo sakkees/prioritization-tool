@@ -32,16 +32,16 @@ public class IssueController {
         for(Map.Entry<String, Object> entry : payload.entrySet()){
             if (entry.getKey().equals("listId")){
                 issueRepository.deleteListById(entry.getValue().toString());
+                return ResponseEntity.status(HttpStatus.OK).body("List deleted.");
             }
         }
-        return ResponseEntity.status(HttpStatus.OK).body("List deleted.");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
     }
 
     @DeleteMapping("/deleteItem")
     public ResponseEntity<String> deleteIssue(@NotNull @RequestBody Map<String, String> payload){
         String issueId = null;
         String listId = null;
-
         for(Map.Entry<String, String> entry : payload.entrySet()){
             if(entry.getKey().equals("itemId")){
                 issueId = entry.getValue();
