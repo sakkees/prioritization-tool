@@ -21,26 +21,31 @@ public class IssueController {
         this.issueRepository = issueRepository;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/issues")
     public ResponseEntity<String> add(@RequestBody MyList list){
         issueRepository.put(list);
-        return ResponseEntity.status(HttpStatus.CREATED).body(list.getOwner() + " added.");
+        return ResponseEntity.status(HttpStatus.CREATED).body("List " + list.getId()+ " with owner " + list.getOwner() + " added.");
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteList(@NotNull @RequestBody Map<String, Object> payload){
-        for(Map.Entry<String, Object> entry : payload.entrySet()){
+    @DeleteMapping("/issues/{listId}")
+    public ResponseEntity<String> deleteList(@PathVariable String listId){
+       /* for(Map.Entry<String, Object> entry : payload.entrySet()){
             if (entry.getKey().equals("listId")){
                 issueRepository.deleteListById(entry.getValue().toString());
                 return ResponseEntity.status(HttpStatus.OK).body("List deleted.");
             }
+        } */
+        if(listId != null){
+            issueRepository.deleteListById(listId);
+            return ResponseEntity.status(HttpStatus.OK).body("List deleted.");
+
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Bad request");
     }
-
-    @DeleteMapping("/deleteItem")
-    public ResponseEntity<String> deleteIssue(@NotNull @RequestBody Map<String, String> payload){
-        String issueId = null;
+//@NotNull @RequestBody Map<String, String> payload
+    @DeleteMapping("/issues/{listId}/{issueId}")
+    public ResponseEntity<String> deleteIssue(@NotNull @PathVariable String listId, @NotNull @PathVariable String issueId){
+/*        String issueId = null;
         String listId = null;
         for(Map.Entry<String, String> entry : payload.entrySet()){
             if(entry.getKey().equals("itemId")){
@@ -50,12 +55,13 @@ public class IssueController {
                 listId = entry.getValue();
             }
         }
-        String id = issueId;
+        String id = issueId; */
+
         issueRepository.deleteItemById(issueId,listId);
-        return ResponseEntity.status(HttpStatus.OK).body("(List Id): " + listId + ", (Issue Id): " +  id + " deleted!");
+        return ResponseEntity.status(HttpStatus.OK).body("(List Id): " + listId + ", (Issue Id): " +  issueId + " deleted!");
     }
 
-    @PutMapping("/addIssue")
+    @PutMapping("/issues")
     public ResponseEntity<String> addIssueToList(@NotNull @RequestBody Map<String, Object> payload) {
         MyItem item = null;
         String listId = null;
@@ -74,9 +80,9 @@ public class IssueController {
         return ResponseEntity.status(HttpStatus.OK).body("Added");
     }
 
-    @GetMapping("/issue")
-    public ResponseEntity<MyItem> getIssueById(@NotNull @RequestBody Map<String, String> payload) {
-        String listId = null;
+    @GetMapping("/issues/{listId}/{issueId}")
+    public ResponseEntity<MyItem> getIssueById(@NotNull @PathVariable String listId, @NotNull @PathVariable String issueId) {
+       /* String listId = null;
         String itemId = null;
         for(Map.Entry<String, String> entry : payload.entrySet()){
             if(entry.getKey().equals("listId")){
@@ -85,17 +91,18 @@ public class IssueController {
             if(entry.getKey().equals("issueId")){
                 itemId = entry.getValue();
             }
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(issueRepository.getItemById(itemId, listId));
+        }*/
+        return ResponseEntity.status(HttpStatus.OK).body(issueRepository.getItemById(issueId, listId));
     }
-
-    @GetMapping("/list")
-    public ResponseEntity getAllIssues(@NotNull @RequestBody Map<String, String> payload) {
-        for(Map.Entry<String, String> entry : payload.entrySet()){
+   @GetMapping("/issues/{listId}")
+    public ResponseEntity getAllIssues(@NotNull @PathVariable String listId) {
+        /*for(Map.Entry<String, String> entry : payload.entrySet()){
             if(entry.getKey().equals("listId")){
                return ResponseEntity.status(HttpStatus.OK).body(issueRepository.getListById(entry.getValue()));
             }
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No issues");
-    }
+        */
+       return ResponseEntity.status(HttpStatus.OK).body(issueRepository.getListById(listId));
+   }
 }
