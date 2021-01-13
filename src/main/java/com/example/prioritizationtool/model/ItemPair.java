@@ -2,16 +2,16 @@ package com.example.prioritizationtool.model;
 
 import javafx.util.Pair;
 
-public class ItemPair extends Pair<Item, Item> {
-    public ItemPair(Item key, Item value) {
+public class ItemPair extends Pair<MyItem, MyItem> {
+    public ItemPair(MyItem key, MyItem value) {
         super(key, value);
     }
 
-    public Item getFirst() {
+    public MyItem getFirst() {
         return super.getKey();
     }
 
-    public Item getSecond() {
+    public MyItem getSecond() {
         return super.getValue();
     }
 

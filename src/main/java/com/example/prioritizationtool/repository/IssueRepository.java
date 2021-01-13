@@ -1,64 +1,30 @@
 package com.example.prioritizationtool.repository;
 
-import com.example.prioritizationtool.model.Issue;
-import com.example.prioritizationtool.model.Item;
+import com.example.prioritizationtool.model.MyItem;
+import com.example.prioritizationtool.model.MyList;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-/*  TODO:
-*       * Delete does not remove from internal list.
-*       * Edit changes the ID.
-*/
-
 @Repository
-public class IssueRepository implements ItemRepository<Item> {
-    private String projectId;
-    FirestoreOptions firestoreOptions =
-            FirestoreOptions.getDefaultInstance().toBuilder()
-                    .setProjectId(projectId)
-                    .build();
-    private Firestore db = firestoreOptions.getService();
-    private CollectionReference collectionRef = db.collection("issues");
-    ArrayList<Item> issues;
+public class IssueRepository implements ItemRepository {
+    private CollectionReference collectionRef;
 
     public IssueRepository(){
-        issues = new ArrayList<>();
-        fillArray();
-    }
-
-    private void fillArray(){
-        // asynchronously retrieve all issues
-        ApiFuture<QuerySnapshot> query = collectionRef.get();
-        // query.get() blocks on response
-        QuerySnapshot querySnapshot = null;
-        try {
-            querySnapshot = query.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        List<QueryDocumentSnapshot> documents = querySnapshot.getDocuments();
-        Issue issue = null;
-        for (QueryDocumentSnapshot document : documents){
-            issue = document.toObject(Issue.class);
-            issues.add(issue);
-        }
+        String projectId = "named-sunset-265213";
+        FirestoreOptions firestoreOptions = FirestoreOptions.getDefaultInstance().toBuilder()
+                .setProjectId(projectId)
+                .build();
+        Firestore db = firestoreOptions.getService();
+        this.collectionRef = db.collection("issues");
     }
 
     @Override
-    public ArrayList<Item> findAll() {
-
-        return issues;
-    }
-
-    @Override
-    public Issue findByTitle(String id) {
-        Issue issue = null;
-        DocumentReference docRef = collectionRef.document(id);
+    public MyList getListById(String listId) {
+        MyList list = null;
+        DocumentReference docRef = collectionRef.document(listId);
         // asynchronously retrieve the document
         ApiFuture<DocumentSnapshot> future = docRef.get();
         // block on response
@@ -70,20 +36,66 @@ public class IssueRepository implements ItemRepository<Item> {
         }
         if (document.exists()) {
             // convert document to POJO (Plain Old Java Object)
-            issue = document.toObject(Issue.class);
+            list = document.toObject(MyList.class);
         } else {
             System.out.println("No such document!");
         }
-        return issue;
+        return list;
     }
 
-    public void put(Item issue) {
-        collectionRef.document(issue.getTitle()).set(issue);
-        issues.add(issue);
+    private DocumentSnapshot getDocSnap(String listId){
+        ApiFuture<DocumentSnapshot> future = collectionRef.document(listId).get();
+        DocumentSnapshot document = null;
+        try {
+            document = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return document;
     }
 
-    public void delete(Item issue) {
-        collectionRef.document(issue.getTitle()).delete();
-        issues.remove(issue);
+    @Override
+    public MyItem getItemById(String itemId, String listId) {
+        DocumentSnapshot document = getDocSnap(listId);
+        MyList list;
+        MyItem item = null;
+        if (document.exists()) {
+            // convert document to POJO
+            list = document.toObject(MyList.class);
+            item = list.getItemById(itemId);
+        } else {
+            System.out.println("No such document / item!");
+        }
+        return item;
+    }
+
+    @Override
+    public void deleteItemById(String itemId, String listId) {
+        DocumentSnapshot document = getDocSnap(listId);
+        MyList list;
+        MyItem item;
+        if (document.exists()) {
+            // convert document to POJO
+            list = document.toObject(MyList.class);
+            item = list.getItemById(itemId);
+            list.remove(item);
+            this.put(list);
+        } else {
+            System.out.println("No such list / item!");
+        }
+    }
+
+    public void put(MyList list) {
+        collectionRef.document(list.getId()).set(list);
+    }
+
+    @Override
+    public void put(MyItem item, String listId) {
+        collectionRef.document(listId).update("list", FieldValue.arrayUnion(item));
+    }
+
+    @Override
+    public void deleteListById(String listId) {
+        collectionRef.document(listId).delete();
     }
 }
